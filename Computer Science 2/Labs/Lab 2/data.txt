@@ -1,0 +1,14 @@
+Insert Total 0
+Insert Normal 0
+Insert Perfect 1
+Insert Program 1
+Insert Book 2
+Print
+
+Insert Perfect 5
+Insert Bad 10
+Delete 1
+Delete 7
+Insert Money 2
+Delete 3
+Print
