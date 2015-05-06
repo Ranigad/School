@@ -425,29 +425,6 @@ void Family::ReadTransactionFile()
 }
 
 /***************************************************************************
- * SearchForHusband                                                        *
- *                                                                         *
- * Returns a boolean depending on whether or not the given SSN matches a   *
- * husband in the list.                                                    *
- ***************************************************************************/
-bool Family::SearchForHusband(long social)
-{
-	Husband* current = top;		// Pointer to cycle through the list.
-	
-	// Cycle until you reach the node after the last.
-	while(current != NULL)
-	{
-		// Returns true if found.
-		if(current -> SSN == social)
-			return true;
-		
-		current = current -> nextFamily;	// Move to next family
-	}
-	
-	return false; // If not found then the above won't catch. Therefore false.
-}
-
-/***************************************************************************
  * RemoveAllChildrenInFamily                                               *
  *                                                                         *
  * Deletes all the children of a family given the father's SSN.            *
@@ -503,16 +480,6 @@ Husband* Family::getHusband(long husbandSSN)
 	
 	cout << "Husband is not on the list. ";
 	return NULL; // If not found then the above won't catch. Therefore false.
-	
-	/*if(!SearchForHusband(husbandSSN))
-		return NULL;
-	
-	Husband* theHusband = top;
-	while(theHusband -> SSN != husbandSSN)
-	{
-		theHusband = theHusband -> nextFamily;
-	}
-	return theHusband;*/
 }
  
 /***************************************************************************

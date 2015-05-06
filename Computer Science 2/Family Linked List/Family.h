@@ -39,7 +39,6 @@ class Family {
 	// List Initialization
 	void ReadTransactionFile();
 	
-	bool SearchForHusband(long);
 	void RemoveAllChildrenInFamily(long);
 	
 	DadPtr getDad(long);
