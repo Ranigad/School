@@ -102,6 +102,14 @@ void Family::RemoveHusband(long social)
 		current = current -> nextFamily;
 	}
 		
+	if(top -> SSN == social)
+	{
+		top = top -> nextFamily;
+		cout << current -> firstName << " " << current -> lastName << "'s family"
+		<< " has been removed from the list." << endl;
+		delete current;
+		return;
+	}
 	// Connects the previous and next node from the current.
 	previous -> nextFamily = current -> nextFamily;	
 	
