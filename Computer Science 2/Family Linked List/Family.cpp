@@ -288,8 +288,9 @@ void Family::AddAChild(long social, string first, string last, long dad)
  * Given the SSN of the child and father, finds the corresponding husband  *
  * and then deletes the child from the list.                               *
  ***************************************************************************/
-void Family::RemoveAChild(long social, long dad)
+void Family::RemoveAChild(long childSSN, long dadSSN)
 {	
+	/*
 	// Empty list case
 	if(top == NULL)
 	{
@@ -311,6 +312,15 @@ void Family::RemoveAChild(long social, long dad)
 	{
 		current = current -> nextFamily;
 	}
+	*/
+	
+	DadPtr current = getDad(dadSSN);
+	
+	if(current == NULL)
+	{
+		cout << "Could not remove child." << endl;
+		return;
+	}
 	
 	if(current -> myWife == NULL)
 	{
@@ -325,29 +335,29 @@ void Family::RemoveAChild(long social, long dad)
 	
 	// Case if the first child in list is the one being deleted
 	// Wife class's children pointer must be changed rather than mySibling
-	if(currentChild -> SSN == social)
+	if(currentChild -> SSN == childSSN)
 	{
 		current -> myWife -> children = currentChild -> mySibling;
-		delete currentChild;
-		return;
 	}
-	
-	// Finds the correct child.
-	while(currentChild -> SSN != social)
+	else
 	{
-		previousChild = currentChild;
-		currentChild = currentChild -> mySibling;
-		
-		// 404 Child not found
-		if(currentChild == NULL)
+		// Finds the correct child.
+		while(currentChild -> SSN != childSSN)
 		{
-			cout << "Child doesn't exist. Could not remove." << endl;
-			return;
+			previousChild = currentChild;
+			currentChild = currentChild -> mySibling;
+			
+			// 404 Child not found
+			if(currentChild == NULL)
+			{
+				cout << "Child doesn't exist. Could not remove." << endl;
+				return;
+			}
 		}
+		
+		// Has the child before the one being deleted point to the one after
+		previousChild -> mySibling = currentChild -> mySibling;
 	}
-	
-	// Has the child before the one being deleted point to the one after
-	previousChild -> mySibling = currentChild -> mySibling;
 	
 	cout << currentChild -> firstName << " " << currentChild -> lastName
 		<< " has been deleted from " << current -> firstName << " " 
