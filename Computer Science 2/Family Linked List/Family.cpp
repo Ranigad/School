@@ -143,13 +143,12 @@ void Family::AddWife(long social, string first, string last, long husband)
 			<< endl;
 		return;
 	}
-
 	
 	Wife* newWife = new Wife(social, first, last);	// Creates the wife
 	Husband* current = top;		// Husband pointer used to search the list.
 	
 	// Cycle through the list to find the correct husband.
-	while(current -> SSN != social)
+	while(current -> SSN != husband)
 	{
 		current = current -> nextFamily;
 	}
@@ -161,7 +160,7 @@ void Family::AddWife(long social, string first, string last, long husband)
 			<< " is already married! Adultery is bad!" << endl;
 		return;
 	}
-	
+
 	current -> myWife = newWife;	// Sets the wife.
 	newWife -> children = NULL;	// Should be done in constructor already.
 	
