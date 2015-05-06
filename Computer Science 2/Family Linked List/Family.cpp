@@ -77,26 +77,7 @@ void Family::AddHusband(long social, string first, string last)
  * SSN.                                                                    *
  ***************************************************************************/
 void Family::RemoveHusband(long social)
-{		
-	/*
-	// No node case
-	if(top == NULL)
-	{
-		cout << "This list is empty! Could not remove husband." << endl;
-		return;
-	}
-	
-	// Id not in the family list case
-	if(!SearchForHusband(social)) 
-	{
-		cout << "Husband is not in this list. Could not remove husband." 
-			<< endl;
-		return;
-	}
-
-	
-	Husband* current = top;		// Pointer to cycle through the list.
-	*/
+{
 	Husband* current = getHusband(social);
 	
 	if(current == NULL)
@@ -143,31 +124,6 @@ void Family::RemoveHusband(long social)
  ***************************************************************************/
 void Family::AddWife(long social, string first, string last, long husbandSSN)
 {		
-	/*
-	// No node case
-	if(top == NULL)
-	{
-		cout << "There are no husbands for this wife!" << endl;
-		return;
-	}
-	
-	// Husband not in the family list case
-	if(!SearchForHusband(husband)) 
-	{
-		cout << "The husband could not be found! Try Canada?" 
-			<< endl;
-		return;
-	}
-	
-
-	Husband* current = top;		// Husband pointer used to search the list.
-	
-	// Cycle through the list to find the correct husband.
-	while(current -> SSN != husband)
-	{
-		current = current -> nextFamily;
-	}
-	*/
 	
 	HusbandPtr current = getHusband(husbandSSN);
 	
@@ -202,30 +158,6 @@ void Family::AddWife(long social, string first, string last, long husbandSSN)
  ***************************************************************************/
 void Family::RemoveWife(long husbandSSN)
 {
-	/*
-	// No node case
-	if(top == NULL)
-	{
-		cout << "This list is empty! Could not remove wife." << endl;
-		return;
-	}
-	
-	// Husband not in the family list case
-	if(!SearchForHusband(husband)) 
-	{
-		cout << "Husband is not in this list. Could not remove wife." 
-			<< endl;
-		return;
-	}
-
-	Husband* current = top;	// Husband pointer to cycle through the list
-	
-	// Searches for the correct husband.
-	while(current -> SSN != husband)
-	{
-		current = current -> nextFamily;
-	}
-	*/
 	
 	HusbandPtr current = getHusband(husbandSSN);
 	
@@ -265,29 +197,6 @@ void Family::RemoveWife(long husbandSSN)
  ***************************************************************************/
 void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 {
-	/*
-	// Empty list case
-	if(top == NULL)
-	{
-		cout << "This list is empty! Could not add child." << endl;
-		return;
-	}
-	
-	// Checks if the desired husband is in the list
-	if(!SearchForHusband(dad))
-	{
-		cout << "Husband is not on the list. Could not add child." << endl;
-		return;
-	}
-	
-	Husband* current = top;		// Husband pointer to cycle through
-	
-	// Cycling through until the correct husband is found.
-	while(current -> SSN != dad)
-	{
-		current = current -> nextFamily;
-	}
-	*/
 	
 	DadPtr current = getDad(dadSSN);
 	
@@ -323,29 +232,6 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
  ***************************************************************************/
 void Family::RemoveAChild(long childSSN, long dadSSN)
 {	
-	/*
-	// Empty list case
-	if(top == NULL)
-	{
-		cout << "This list is empty! Could not remove child." << endl;
-		return;
-	}
-	
-	// Checks if the desired husband is in the list
-	if(!SearchForHusband(dad))
-	{
-		cout << "Husband is not on the list. Could not remove child." << endl;
-		return;
-	}
-	
-	Husband* current = top;		// Husband pointer to cycle through
-	
-	// Cycling through until the correct husband is found.
-	while(current -> SSN != dad)
-	{
-		current = current -> nextFamily;
-	}
-	*/
 	
 	DadPtr current = getDad(dadSSN);
 	
@@ -408,29 +294,6 @@ void Family::RemoveAChild(long childSSN, long dadSSN)
  ***************************************************************************/
 void Family::PrintAFamily(long husband)
 {	
-	/*
-	// Empty list case
-	if(top == NULL)
-	{
-		cout << "This list is empty! Could not print family." << endl;
-		return;
-	}
-	
-	// Checks if the desired husband is in the list
-	if(!SearchForHusband(husband))
-	{
-		cout << "Husband is not on the list. Could not print family." << endl;
-		return;
-	}
-	
-	Husband* current = top;		// Husband pointer to cycle through
-	
-	// Cycling through until the correct husband is found.
-	while(current -> SSN != husband)
-	{
-		current = current -> nextFamily;
-	}
-	*/
 	
 	Husband* current = getHusband(husband);
 	if(current == NULL)
@@ -560,7 +423,6 @@ void Family::ReadTransactionFile()
 	}
 	
 }
- 
 
 /***************************************************************************
  * SearchForHusband                                                        *
@@ -656,7 +518,7 @@ Husband* Family::getHusband(long husbandSSN)
 /***************************************************************************
  * getDad                                                                  *
  *                                                                         *
- * Another name for getHusband. For clarity in the case children.          *
+ * Another name for getHusband. For clarity in the case of children.       *
  ***************************************************************************/
  DadPtr Family::getDad(long dadSSN)
  {
