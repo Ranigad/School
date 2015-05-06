@@ -530,6 +530,8 @@ void Family::ReadTransactionFile()
 		{
 			PrintAllFamilies();
 		}
+		else if(command.compare("RemoveAllFamilies") == 0)
+			RemoveAllFamilies();
 		else
 			cout << "Invalid command." << endl;
 		
@@ -646,21 +648,16 @@ Husband* Family::getHusband(long husbandSSN)
  * Deletes all the families in the list.                                   *
  ***************************************************************************/
   
-bool Family::RemoveAllFamilies()
+void Family::RemoveAllFamilies()
 {
-	
 	Husband* headOfFamily = top;
-	while (top -> nextFamily != NULL)
+	while(top != NULL)
 	{
-		cout << top -> firstName << " " << top -> lastName 
-			<< " has been removed from this list." << endl;
-		top = top -> nextFamily;
-		RemoveHusband(headOfFamily -> SSN);
-		headOfFamily = top;
+		headOfFamily = top -> nextFamily;
+		RemoveHusband(top -> SSN);
+		top = headOfFamily;
+		cout << endl;
 	}
-	
-	top = NULL;
-	return true;
 }
 
 #endif

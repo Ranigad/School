@@ -45,7 +45,7 @@ class Family {
 	DadPtr getDad(long);
 	HusbandPtr getHusband(long);
 	
-	bool RemoveAllFamilies();
+	void RemoveAllFamilies();
 };
 
 
