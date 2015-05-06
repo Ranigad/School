@@ -8,6 +8,8 @@
 #include <string>
 #include "Person.h"
 #include "Wife.h"
+class Husband;
+typedef Husband* HusbandPtr;
 
 class Husband : public Person{
 

@@ -7,6 +7,8 @@
 #define WIFE_H
 #include "Person.h"
 #include "Child.h"
+class Wife;
+typedef Wife* WifePtr;
 
 class Wife : public Person{
 	

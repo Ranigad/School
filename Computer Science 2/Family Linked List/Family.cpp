@@ -19,6 +19,7 @@
 #include "Family.h"
 using namespace std;
 
+
 /***************************************************************************
  * Default Constructor                                                     *
  *                                                                         *
@@ -76,7 +77,7 @@ void Family::AddHusband(long social, string first, string last)
  ***************************************************************************/
 void Family::RemoveHusband(long social)
 {		
-
+	/*
 	// No node case
 	if(top == NULL)
 	{
@@ -94,35 +95,37 @@ void Family::RemoveHusband(long social)
 
 	
 	Husband* current = top;		// Pointer to cycle through the list.
-	Husband* previous = top;	// Pointer to the family before current.
-	
-	// Cycle until you reach the correct Husband.
-	while(current -> SSN != social)
+	*/
+	Husband* current = getHusband(social);
+	if(top == NULL)
 	{
-		previous = current;
-		current = current -> nextFamily;
-	}
-		
-	if(top -> SSN == social)
-	{
-		top = top -> nextFamily;
-		cout << current -> firstName << " " << current -> lastName << "'s family"
-		<< " has been removed from the list." << endl;
-		delete current;
+		cout << "Could not remove husband." << endl;
 		return;
 	}
-	// Connects the previous and next node from the current.
-	previous -> nextFamily = current -> nextFamily;	
-	
-	// If there's only one node, set top equal to NULL and delete the one node.
-	// We already know it exists from the search.
-	if(top -> nextFamily == NULL)
-		top = NULL;
 	
 	// If the husband has a wife, call RemoveWife.
-	// RemoveWife automatically removes all children.
-	if(top -> myWife != NULL)
+	// RemoveWife automatically removes all children if applicable.
+	if(current -> myWife != NULL)
 		RemoveWife(social);
+	
+	if(top == current)
+	{
+		top = top -> nextFamily;	
+	}
+	else
+	{
+		Husband* previous = top;	// Pointer to the family before current.
+		
+		// Cycle until you reach the correct Husband.
+		while(previous -> nextFamily != current)
+		{
+			previous = previous -> nextFamily;
+		}
+		// Connects the previous and next node from the current.
+		previous -> nextFamily = current -> nextFamily;	
+	}
+	
+
 	
 	cout << current -> firstName << " " << current -> lastName << "'s family"
 		<< " has been removed from the list." << endl;
@@ -605,6 +608,16 @@ Husband* Family::getHusband(long husbandSSN)
 	return theHusband;*/
 }
  
+/***************************************************************************
+ * getDad                                                                  *
+ *                                                                         *
+ * Another name for getHusband. For clarity in the case children.          *
+ ***************************************************************************/
+ DadPtr Family::getDad(long dadSSN)
+ {
+	 return getHusband(dadSSN);
+ }
+  
 /***************************************************************************
  * RemoveAllFamilies                                                       *
  *                                                                         *

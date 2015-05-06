@@ -6,6 +6,8 @@
 #ifndef CHILD_H
 #define CHILD_H
 #include "Person.h"
+class Child;
+typedef Child* ChildPtr;
 
 class Child : public Person {
 

@@ -8,6 +8,8 @@
 #include "Husband.h"
 using namespace std;
 
+typedef Husband* DadPtr;
+
 class Family {
 	protected:
 	Husband* top;
@@ -39,7 +41,10 @@ class Family {
 	
 	bool SearchForHusband(long);
 	void RemoveAllChildrenInFamily(long);
-	Husband* getHusband(long);
+	
+	DadPtr getDad(long);
+	HusbandPtr getHusband(long);
+	
 	bool RemoveAllFamilies();
 };
 
