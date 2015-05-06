@@ -253,6 +253,13 @@ void Family::AddAChild(long social, string first, string last, long dad)
 	}
 	
 	Wife* theWife = current -> myWife; 	// Wife for reference
+	
+	if(theWife == NULL)
+	{
+		cout << "This man is not married!" << endl;
+		return;
+	}
+	
 	Child* newChild = new Child(social, first, last);	// Creates the child
 	
 	// Adds the child to the top of the child list
