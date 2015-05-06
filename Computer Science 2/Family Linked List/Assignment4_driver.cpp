@@ -1,6 +1,6 @@
 /*   Name: Charles Li
      Start Date: 4/30/15
-	 Last Edit Date: 4/30/15
+	 Last Edit Date: 5/6/15
 	 Class: CS 211
 	 Description: Utilizes object oriented programming and linked lists to model a list of families. 
 	 

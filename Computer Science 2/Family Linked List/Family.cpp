@@ -48,26 +48,12 @@ Family::~Family()
 void Family::AddHusband(long social, string first, string last)
 {
 	// Make the new family
-	Husband* newFamily = new Husband(social, first, last);
+	HusbandPtr newFamily = new Husband(social, first, last);
 
 	newFamily -> nextFamily = top;	// Prepares for insert at top
 	top = newFamily;	// Inserts at top
 	
 	cout << first << " " << last << " has been added to the list!" << endl;
-	
-	/*	Insert at bottom Case
-	else
-	{
-		newFamily -> nextFamily = NULL;	// Already done in constructor
-		Husband* current = top;		// Pointer to cycle through the list
-		while(current -> nextFamily != NULL)
-		{
-			// Move the cycling pointer until you find the last Family
-			current = current -> nextFamily;
-		}
-		current -> nextFamily = newFamily; // Add the new family to the end.
-	}
-	*/
 }
   
 /***************************************************************************
@@ -78,7 +64,7 @@ void Family::AddHusband(long social, string first, string last)
  ***************************************************************************/
 void Family::RemoveHusband(long social)
 {
-	Husband* current = getHusband(social);
+	HusbandPtr current = getHusband(social);
 	
 	if(current == NULL)
 	{
@@ -97,7 +83,7 @@ void Family::RemoveHusband(long social)
 	}
 	else
 	{
-		Husband* previous = top;	// Pointer to the family before current.
+		HusbandPtr previous = top;	// Pointer to the family before current.
 		
 		// Cycle until you reach the correct Husband.
 		while(previous -> nextFamily != current)
@@ -141,7 +127,7 @@ void Family::AddWife(long social, string first, string last, long husbandSSN)
 		return;
 	}
 
-	Wife* newWife = new Wife(social, first, last);	// Creates the wife
+	WifePtr newWife = new Wife(social, first, last);	// Creates the wife
 	current -> myWife = newWife;	// Sets the wife.
 	newWife -> children = NULL;	// Should be done in constructor already.
 	
@@ -167,7 +153,7 @@ void Family::RemoveWife(long husbandSSN)
 		return;
 	}
 	
-	Wife* theWife = current -> myWife;
+	WifePtr theWife = current -> myWife;
 	
 	// Checks if there is a wife to delete.
 	if(theWife == NULL)
@@ -206,7 +192,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 		return;
 	}
 	
-	Wife* theWife = current -> myWife; 	// Wife for reference
+	WifePtr theWife = current -> myWife; 	// Wife for reference
 	
 	if(theWife == NULL)
 	{
@@ -214,7 +200,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 		return;
 	}
 	
-	Child* newChild = new Child(childSSN, first, last);	// Creates the child
+	ChildPtr newChild = new Child(childSSN, first, last);	// Creates the child
 	
 	// Adds the child to the top of the child list
 	newChild -> mySibling = theWife -> children;	
@@ -249,8 +235,8 @@ void Family::RemoveAChild(long childSSN, long dadSSN)
 	}
 	
 	// Create a child pointer and initialize to first child.
-	Child* currentChild = current -> myWife -> children;	
-	Child* previousChild = currentChild;	// Holds previous child
+	ChildPtr currentChild = current -> myWife -> children;	
+	ChildPtr previousChild = currentChild;	// Holds previous child
 	
 	// Case if the first child in list is the one being deleted
 	// Wife class's children pointer must be changed rather than mySibling
@@ -295,7 +281,7 @@ void Family::RemoveAChild(long childSSN, long dadSSN)
 void Family::PrintAFamily(long husband)
 {	
 	
-	Husband* current = getHusband(husband);
+	HusbandPtr current = getHusband(husband);
 	if(current == NULL)
 	{
 		cout << "Could not print family." << endl;
@@ -307,13 +293,13 @@ void Family::PrintAFamily(long husband)
 	if(current -> myWife == NULL)
 		return;
 	
-	Wife* theWife = current -> myWife;
+	WifePtr theWife = current -> myWife;
 	cout << "Wife" << endl << *theWife << endl;
 	
 	if(theWife -> children == NULL)
 		return;
 	
-	Child* theChild = theWife -> children;
+	ChildPtr theChild = theWife -> children;
 	
 	cout << "Children" << endl;
 	
@@ -333,7 +319,7 @@ void Family::PrintAllFamilies()
 {
 	if(top != NULL)
 	{
-		Husband* theHusband = top;
+		HusbandPtr theHusband = top;
 		while (theHusband != NULL)
 		{
 			PrintAFamily(theHusband -> SSN);
@@ -438,7 +424,7 @@ void Family::RemoveAllChildrenInFamily(long dad)
 		return;
 	}
 	
-	Wife* theWife = theDad -> myWife;
+	WifePtr theWife = theDad -> myWife;
 	
 	if(theWife == NULL)	// Checks if there is a wife
 	{
@@ -458,7 +444,7 @@ void Family::RemoveAllChildrenInFamily(long dad)
  *                                                                         *
  * Given the husband's SSN, returns the pointer to the husband's node.	   *
  ***************************************************************************/
-Husband* Family::getHusband(long husbandSSN)
+HusbandPtr Family::getHusband(long husbandSSN)
 {
 	if(top == NULL)
 	{
@@ -466,7 +452,7 @@ Husband* Family::getHusband(long husbandSSN)
 		return NULL;
 	}
 	
-	Husband* current = top;		// Pointer to cycle through the list.
+	HusbandPtr current = top;		// Pointer to cycle through the list.
 	
 	// Cycle until you reach the node after the last.
 	while(current != NULL)
@@ -500,7 +486,7 @@ Husband* Family::getHusband(long husbandSSN)
   
 void Family::RemoveAllFamilies()
 {
-	Husband* headOfFamily = top;
+	HusbandPtr headOfFamily = top;
 	while(top != NULL)
 	{
 		headOfFamily = top -> nextFamily;

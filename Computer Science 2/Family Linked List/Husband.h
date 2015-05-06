@@ -16,8 +16,8 @@ class Husband : public Person{
 	friend class Family;
 
 	private:
-		Husband* nextFamily;
-		Wife* myWife;
+		HusbandPtr nextFamily;
+		WifePtr myWife;
 		
 	public:
 		Husband();

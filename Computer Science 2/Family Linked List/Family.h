@@ -12,7 +12,7 @@ typedef Husband* DadPtr;
 
 class Family {
 	protected:
-	Husband* top;
+	HusbandPtr top;
 	
 	public:
 	Family();

@@ -14,7 +14,7 @@ class Child : public Person {
 	friend class Family;
 
 	private:
-		Child* mySibling;
+		ChildPtr mySibling;
 		
 	public:
 		Child();

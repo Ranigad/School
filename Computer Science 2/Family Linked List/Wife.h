@@ -15,7 +15,7 @@ class Wife : public Person{
 	friend class Family;
 	
 	private:
-	Child* children;
+	ChildPtr children;
 	
 	public:
 	Wife();
