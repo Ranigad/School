@@ -19,7 +19,8 @@
 #include "Family.h"
 using namespace std;
 
-
+//-----------------------------------------------------------------------------
+// Constructor / Destructor 
 /***************************************************************************
  * Default Constructor                                                     *
  *                                                                         *
@@ -39,16 +40,21 @@ Family::~Family()
 {
 	RemoveAllFamilies();
 }
- 
+
+//-----------------------------------------------------------------------------
+// Mutators
+
+//-----------------------------------------------------------------------------
+	// Husband
 /***************************************************************************
  * AddAHusband                                                             *
  *                                                                         *
  * Adds a Node of Husband class to the end of the horizontal list.         *
  ***************************************************************************/
-void Family::AddHusband(long social, string first, string last)
+void Family::AddHusband(long husbandSSN, string first, string last)
 {
 	// Make the new family
-	HusbandPtr newFamily = new Husband(social, first, last);
+	HusbandPtr newFamily = new Husband(husbandSSN, first, last);
 
 	newFamily -> nextFamily = top;	// Prepares for insert at top
 	top = newFamily;	// Inserts at top
@@ -62,11 +68,11 @@ void Family::AddHusband(long social, string first, string last)
  * Given a long SSN, delete the husband in the list with the corresponding *
  * SSN.                                                                    *
  ***************************************************************************/
-void Family::RemoveHusband(long social)
+void Family::RemoveHusband(long husbandSSN)
 {
-	HusbandPtr current = getHusband(social);
+	HusbandPtr theHusband = getHusband(husbandSSN);
 	
-	if(current == NULL)
+	if(theHusband == NULL)
 	{
 		cout << "Could not remove husband." << endl;
 		return;
@@ -74,65 +80,69 @@ void Family::RemoveHusband(long social)
 	
 	// If the husband has a wife, call RemoveWife.
 	// RemoveWife automatically removes all children if applicable.
-	if(current -> myWife != NULL)
-		RemoveWife(social);
+	if(theHusband -> myWife != NULL)
+		RemoveWife(husbandSSN);
 	
-	if(top == current)
+	if(top == theHusband)
 	{
 		top = top -> nextFamily;	
 	}
 	else
 	{
-		HusbandPtr previous = top;	// Pointer to the family before current.
+		// Pointer to the family before currently selected husband.
+		HusbandPtr previous = top;	
 		
 		// Cycle until you reach the correct Husband.
-		while(previous -> nextFamily != current)
+		while(previous -> nextFamily != theHusband)
 		{
 			previous = previous -> nextFamily;
 		}
 		// Connects the previous and next node from the current.
-		previous -> nextFamily = current -> nextFamily;	
+		previous -> nextFamily = theHusband -> nextFamily;	
 	}
 	
 
 	
-	cout << current -> firstName << " " << current -> lastName << "'s family"
+	cout << theHusband -> firstName << " " 
+		<< theHusband -> lastName << "'s family"
 		<< " has been removed from the list." << endl;
 		
-	delete current;
+	delete theHusband;
 }
 
+//-----------------------------------------------------------------------------
+	// Wife
 /***************************************************************************
  * AddAWife                                                                *
  *                                                                         *
  * Adds a Node of the Wife class below a Husband node. Is passed a husband *
  * SSN in order to identify the husband                                    *
  ***************************************************************************/
-void Family::AddWife(long social, string first, string last, long husbandSSN)
+void Family::AddWife(long wifeSSN, string first, string last, long husbandSSN)
 {		
 	
-	HusbandPtr current = getHusband(husbandSSN);
+	HusbandPtr theHusband = getHusband(husbandSSN);
 	
-	if(current == NULL)
+	if(theHusband == NULL)
 	{
 		cout << "There are no husbands for this wife!" << endl;
 		return;
 	}
 	
 	// Checks if the husband is already married.
-	if(current -> myWife != NULL)
+	if(theHusband -> myWife != NULL)
 	{
-		cout << current -> firstName << " " << current -> lastName 
+		cout << theHusband -> firstName << " " << theHusband -> lastName 
 			<< " is already married! Adultery is bad!" << endl;
 		return;
 	}
 
-	WifePtr newWife = new Wife(social, first, last);	// Creates the wife
-	current -> myWife = newWife;	// Sets the wife.
+	WifePtr newWife = new Wife(wifeSSN, first, last);	// Creates the wife
+	theHusband -> myWife = newWife;	// Sets the wife.
 	newWife -> children = NULL;	// Should be done in constructor already.
 	
 	cout << "I now pronounce " << first << " " << last << " and "
-		<< current -> firstName << " " << current -> lastName 
+		<< theHusband -> firstName << " " << theHusband -> lastName 
 		<< " husband and wife." << endl;
 }
 
@@ -145,37 +155,39 @@ void Family::AddWife(long social, string first, string last, long husbandSSN)
 void Family::RemoveWife(long husbandSSN)
 {
 	
-	HusbandPtr current = getHusband(husbandSSN);
+	HusbandPtr theHusband = getHusband(husbandSSN);
 	
-	if(current == NULL)
+	if(theHusband == NULL)
 	{
 		cout << "Could not remove wife." << endl;
 		return;
 	}
 	
-	WifePtr theWife = current -> myWife;
+	WifePtr theWife = theHusband -> myWife;
 	
 	// Checks if there is a wife to delete.
 	if(theWife == NULL)
 	{
-		cout << current -> firstName << " " << current -> lastName
+		cout << theHusband -> firstName << " " << theHusband -> lastName
 			<< " is currently unmarried. Could not remove wife." << endl;
 		return;
 	}
 
 	// Delete all children
-	RemoveAllChildrenInFamily(current -> SSN);
+	RemoveAllChildrenInFamily(theHusband -> SSN);
 	
 	cout << theWife -> firstName << " " << theWife -> lastName
-		<< " removed from " << current -> firstName << " " 
-		<< current -> lastName << "'s family." << endl;
+		<< " removed from " << theHusband -> firstName << " " 
+		<< theHusband -> lastName << "'s family." << endl;
 		
 	// Delete wife and set the wife to NULL.		
 	delete theWife;
-	current -> myWife = NULL;
+	theHusband -> myWife = NULL;
 
 }	
 
+//-----------------------------------------------------------------------------
+	// Child
 /***************************************************************************
  * AddAChild                                                               *
  *                                                                         *
@@ -184,15 +196,15 @@ void Family::RemoveWife(long husbandSSN)
 void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 {
 	
-	DadPtr current = getDad(dadSSN);
+	DadPtr theHusband = getDad(dadSSN);
 	
-	if(current == NULL)
+	if(theHusband == NULL)
 	{
 		cout << "Could not add child." << endl;
 		return;
 	}
 	
-	WifePtr theWife = current -> myWife; 	// Wife for reference
+	WifePtr theWife = theHusband -> myWife; 	// Wife for reference
 	
 	if(theWife == NULL)
 	{
@@ -207,7 +219,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 	theWife -> children = newChild;
 
 	cout << first << " " << last << " has been added under "
-		<< current -> firstName << " " << current -> lastName << endl;
+		<< theHusband -> firstName << " " << theHusband -> lastName << endl;
 }
 
 /***************************************************************************
@@ -219,30 +231,30 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 void Family::RemoveAChild(long childSSN, long dadSSN)
 {	
 	
-	DadPtr current = getDad(dadSSN);
+	DadPtr theDad = getDad(dadSSN);
 	
-	if(current == NULL)
+	if(theDad == NULL)
 	{
 		cout << "Could not remove child." << endl;
 		return;
 	}
 	
-	if(current -> myWife == NULL)
+	if(theDad -> myWife == NULL)
 	{
-		cout << current -> firstName << " " << current -> lastName
+		cout << theDad -> firstName << " " << theDad -> lastName
 			<< " does not have a wife. Child could not be removed.";
 		return;
 	}
 	
 	// Create a child pointer and initialize to first child.
-	ChildPtr currentChild = current -> myWife -> children;	
+	ChildPtr currentChild = theDad -> myWife -> children;	
 	ChildPtr previousChild = currentChild;	// Holds previous child
 	
 	// Case if the first child in list is the one being deleted
 	// Wife class's children pointer must be changed rather than mySibling
 	if(currentChild -> SSN == childSSN)
 	{
-		current -> myWife -> children = currentChild -> mySibling;
+		theDad -> myWife -> children = currentChild -> mySibling;
 	}
 	else
 	{
@@ -265,35 +277,66 @@ void Family::RemoveAChild(long childSSN, long dadSSN)
 	}
 	
 	cout << currentChild -> firstName << " " << currentChild -> lastName
-		<< " has been deleted from " << current -> firstName << " " 
-		<< current -> lastName << "'s family." << endl;
+		<< " has been deleted from " << theDad -> firstName << " " 
+		<< theDad -> lastName << "'s family." << endl;
 		
 	delete currentChild;	// Deletes the child.
 	
 }
 
 /***************************************************************************
+ * RemoveAllChildrenInFamily                                               *
+ *                                                                         *
+ * Deletes all the children of a family given the father's SSN.            *
+ ***************************************************************************/
+void Family::RemoveAllChildrenInFamily(long dadSSN)
+{
+	DadPtr theDad = getHusband(dadSSN);
+	if(theDad == NULL)	// Catch husband does not exist.
+	{
+		cout << "Could not find Dad. Children could not be removed." << endl;
+		return;
+	}
+	
+	WifePtr theWife = theDad -> myWife;
+	
+	if(theWife == NULL)	// Checks if there is a wife
+	{
+		cout << "This husband has no wife. No children to remove." << endl;
+		return;
+	}
+	
+	// Removes the children one at a time from the top of the list.
+	while(theWife -> children != NULL)
+	{
+		RemoveAChild(theWife -> children -> SSN, dadSSN);
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Print Functions
+/***************************************************************************
  * PrintAFamily                                                            *
  *                                                                         *
  * Given an SSN for a husband, find the husband in the list and print all  *
  * the associated family members.                                          *
  ***************************************************************************/
-void Family::PrintAFamily(long husband)
+void Family::PrintAFamily(long husbandSSN)
 {	
 	
-	HusbandPtr current = getHusband(husband);
-	if(current == NULL)
+	HusbandPtr theHusband = getHusband(husbandSSN);
+	if(theHusband == NULL)
 	{
 		cout << "Could not print family." << endl;
 		return;
 	}
 	
-	cout << "Husband" << endl << *current << endl;		// Print dad info.
+	cout << "Husband" << endl << *theHusband << endl;		// Print dad info.
 	
-	if(current -> myWife == NULL)
+	if(theHusband -> myWife == NULL)
 		return;
 	
-	WifePtr theWife = current -> myWife;
+	WifePtr theWife = theHusband -> myWife;
 	cout << "Wife" << endl << *theWife << endl;
 	
 	if(theWife -> children == NULL)
@@ -330,6 +373,8 @@ void Family::PrintAllFamilies()
 		cout << "There are no families!" << endl;
 }
 
+//-----------------------------------------------------------------------------
+// List Initialization
 /***************************************************************************
  * ReadTransactionFile                                                     *
  *                                                                         *
@@ -400,8 +445,6 @@ void Family::ReadTransactionFile()
 		{
 			PrintAllFamilies();
 		}
-		else if(command.compare("RemoveAllFamilies") == 0)
-			RemoveAllFamilies();
 		else
 			cout << "Invalid command." << endl;
 		
@@ -410,35 +453,8 @@ void Family::ReadTransactionFile()
 	
 }
 
-/***************************************************************************
- * RemoveAllChildrenInFamily                                               *
- *                                                                         *
- * Deletes all the children of a family given the father's SSN.            *
- ***************************************************************************/
-void Family::RemoveAllChildrenInFamily(long dad)
-{
-	DadPtr theDad = getHusband(dad);
-	if(theDad == NULL)	// Catch husband does not exist.
-	{
-		cout << "Could not find Dad. Children could not be removed." << endl;
-		return;
-	}
-	
-	WifePtr theWife = theDad -> myWife;
-	
-	if(theWife == NULL)	// Checks if there is a wife
-	{
-		cout << "This husband has no wife. No children to remove." << endl;
-		return;
-	}
-	
-	// Removes the children one at a time from the top of the list.
-	while(theWife -> children != NULL)
-	{
-		RemoveAChild(theWife -> children -> SSN, dad);
-	}
-}
-
+//-----------------------------------------------------------------------------
+// Helper Functions
 /***************************************************************************
  * getHusband                                                              *
  *                                                                         *
@@ -452,16 +468,16 @@ HusbandPtr Family::getHusband(long husbandSSN)
 		return NULL;
 	}
 	
-	HusbandPtr current = top;		// Pointer to cycle through the list.
+	HusbandPtr theHusband = top;		// Pointer to cycle through the list.
 	
 	// Cycle until you reach the node after the last.
-	while(current != NULL)
+	while(theHusband != NULL)
 	{
 		// Returns true if found.
-		if(current -> SSN == husbandSSN)
-			return current;
+		if(theHusband -> SSN == husbandSSN)
+			return theHusband;
 		
-		current = current -> nextFamily;	// Move to next family
+		theHusband = theHusband -> nextFamily;	// Move to next family
 	}
 	
 	cout << "Husband is not on the list. ";
@@ -485,7 +501,7 @@ HusbandPtr Family::getHusband(long husbandSSN)
  ***************************************************************************/
   
 void Family::RemoveAllFamilies()
-{
+{	
 	HusbandPtr headOfFamily = top;
 	while(top != NULL)
 	{

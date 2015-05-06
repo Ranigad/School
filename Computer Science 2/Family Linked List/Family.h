@@ -31,6 +31,7 @@ class Family {
 		// Child
 	void AddAChild(long, string, string, long);
 	void RemoveAChild(long, long);
+	void RemoveAllChildrenInFamily(long);
 	
 	// Print Functions
 	void PrintAFamily(long);
@@ -39,11 +40,9 @@ class Family {
 	// List Initialization
 	void ReadTransactionFile();
 	
-	void RemoveAllChildrenInFamily(long);
-	
+	// Helper Functions
 	DadPtr getDad(long);
 	HusbandPtr getHusband(long);
-	
 	void RemoveAllFamilies();
 };
 
