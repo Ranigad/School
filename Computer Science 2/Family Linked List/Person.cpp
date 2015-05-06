@@ -46,5 +46,17 @@ using namespace std;
 	{
 	}
 	
+/***************************************************************************
+ * operator<<                                                              *
+ *                                                                         *
+ * Sets the output of an output stream call.                               *
+ ***************************************************************************/
+	ostream& operator<<(ostream& os, const Person& p)
+	{
+		os << "Name: " << p.firstName << " " << p.lastName << endl
+			<< "Social Security: " << p.SSN << endl;
+		return os;
+	}
+	
 #endif
 

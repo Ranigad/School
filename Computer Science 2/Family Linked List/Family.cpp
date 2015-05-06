@@ -11,6 +11,7 @@
 #ifndef FAMILY_CPP
 #define FAMILY_CPP
 
+#include <fstream>
 #include <iostream>
 #include "Husband.h"
 #include "Wife.h"
@@ -320,7 +321,7 @@ void Family::RemoveAChild(long social, long dad)
 		currentChild = currentChild -> mySibling;
 		
 		// 404 Child not found
-		if(currentChild -> SSN == NULL)
+		if(currentChild == NULL)
 		{
 			cout << "Child doesn't exist. Could not remove." << endl;
 			return;
@@ -368,22 +369,24 @@ void Family::PrintAFamily(long husband)
 		current = current -> nextFamily;
 	}
 	
-	cout << current << endl;		// Print dad info.
+	cout << "Husband" << endl << *current << endl;		// Print dad info.
 	
 	if(current -> myWife == NULL)
 		return;
 	
 	Wife* theWife = current -> myWife;
-	cout << theWife << endl;
+	cout << "Wife" << endl << *theWife << endl;
 	
 	if(theWife -> children == NULL)
 		return;
 	
 	Child* theChild = theWife -> children;
 	
+	cout << "Children" << endl;
+	
 	while(theChild != NULL)
 	{
-		cout << theChild << endl;
+		cout << *theChild << endl;
 		theChild = theChild -> mySibling;
 	}
 	
@@ -404,6 +407,8 @@ void Family::PrintAllFamilies()
 			theHusband = theHusband -> nextFamily;
 		}
 	}
+	else
+		cout << "There are no families!" << endl;
 }
 
 /***************************************************************************
@@ -426,6 +431,7 @@ void Family::ReadTransactionFile()
 	
 	while(fin >> command)
 	{
+		cout << "Command: " << command << endl;
 		if(command.compare("AddHusband") == 0)
 		{
 			long id;
@@ -471,14 +477,14 @@ void Family::ReadTransactionFile()
 			fin >> dadId;
 			PrintAFamily(dadId);
 		}
-		else if(command.compare("PrintAllFamilies"))
+		else if(command.compare("PrintAllFamilies") == 0)
 		{
 			PrintAllFamilies();
 		}
 		else
 			cout << "Invalid command." << endl;
 		
-		cout << "_______________________________";
+		cout << "_______________________________" << endl;
 	}
 	
 }
@@ -562,7 +568,7 @@ Husband* Family::getHusband(long husbandSSN)
  * Deletes all the families in the list.                                   *
  ***************************************************************************/
   
-bool RemoveAllFamilies()
+bool Family::RemoveAllFamilies()
 {
 	
 	Husband* headOfFamily = top;
