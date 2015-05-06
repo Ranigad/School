@@ -37,6 +37,7 @@ Family::Family()
  ***************************************************************************/
 Family::~Family()
 {
+	RemoveAllFamilies();
 }
  
 /***************************************************************************
@@ -97,7 +98,8 @@ void Family::RemoveHusband(long social)
 	Husband* current = top;		// Pointer to cycle through the list.
 	*/
 	Husband* current = getHusband(social);
-	if(top == NULL)
+	
+	if(current == NULL)
 	{
 		cout << "Could not remove husband." << endl;
 		return;
