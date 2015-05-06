@@ -141,8 +141,9 @@ void Family::RemoveHusband(long social)
  * Adds a Node of the Wife class below a Husband node. Is passed a husband *
  * SSN in order to identify the husband                                    *
  ***************************************************************************/
-void Family::AddWife(long social, string first, string last, long husband)
+void Family::AddWife(long social, string first, string last, long husbandSSN)
 {		
+	/*
 	// No node case
 	if(top == NULL)
 	{
@@ -158,13 +159,22 @@ void Family::AddWife(long social, string first, string last, long husband)
 		return;
 	}
 	
-	Wife* newWife = new Wife(social, first, last);	// Creates the wife
+
 	Husband* current = top;		// Husband pointer used to search the list.
 	
 	// Cycle through the list to find the correct husband.
 	while(current -> SSN != husband)
 	{
 		current = current -> nextFamily;
+	}
+	*/
+	
+	HusbandPtr current = getHusband(husbandSSN);
+	
+	if(current == NULL)
+	{
+		cout << "There are no husbands for this wife!" << endl;
+		return;
 	}
 	
 	// Checks if the husband is already married.
@@ -175,6 +185,7 @@ void Family::AddWife(long social, string first, string last, long husband)
 		return;
 	}
 
+	Wife* newWife = new Wife(social, first, last);	// Creates the wife
 	current -> myWife = newWife;	// Sets the wife.
 	newWife -> children = NULL;	// Should be done in constructor already.
 	
