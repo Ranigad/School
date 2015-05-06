@@ -263,8 +263,9 @@ void Family::RemoveWife(long husbandSSN)
  *                                                                         *
  * Creates a new child under the husband that matches the passed SSN.      *
  ***************************************************************************/
-void Family::AddAChild(long social, string first, string last, long dad)
+void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 {
+	/*
 	// Empty list case
 	if(top == NULL)
 	{
@@ -286,16 +287,25 @@ void Family::AddAChild(long social, string first, string last, long dad)
 	{
 		current = current -> nextFamily;
 	}
+	*/
+	
+	DadPtr current = getDad(dadSSN);
+	
+	if(current == NULL)
+	{
+		cout << "Could not add child." << endl;
+		return;
+	}
 	
 	Wife* theWife = current -> myWife; 	// Wife for reference
 	
 	if(theWife == NULL)
 	{
-		cout << "This man is not married!" << endl;
+		cout << "This man is not married! He can't have a child." << endl;
 		return;
 	}
 	
-	Child* newChild = new Child(social, first, last);	// Creates the child
+	Child* newChild = new Child(childSSN, first, last);	// Creates the child
 	
 	// Adds the child to the top of the child list
 	newChild -> mySibling = theWife -> children;	
