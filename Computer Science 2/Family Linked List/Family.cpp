@@ -109,6 +109,11 @@ void Family::RemoveHusband(long social)
 	if(top -> nextFamily == NULL)
 		top = NULL;
 	
+	// If the husband has a wife, call RemoveWife.
+	// RemoveWife automatically removes all children.
+	if(top -> myWife != NULL)
+		RemoveWife(social);
+	
 	cout << current -> firstName << " " << current -> lastName << "'s family"
 		<< " has been removed from the list." << endl;
 		
@@ -401,8 +406,80 @@ void Family::PrintAllFamilies()
 	}
 }
 
+/***************************************************************************
+ * ReadTransactionFile                                                     *
+ *                                                                         *
+ * Reads a command and parameters from a designated input file and calls a *
+ * corresponding method.                                                   *
+ ***************************************************************************/
 void Family::ReadTransactionFile()
 {
+	string command;
+	ifstream fin;
+	fin.open("data.txt");
+	
+	if(!fin)
+	{
+		cout << "File not found. " << endl;
+		return;
+	}
+	
+	while(fin >> command)
+	{
+		if(command.compare("AddHusband") == 0)
+		{
+			long id;
+			string first, last;
+			fin >> id >> first >> last;
+			AddHusband(id, first, last);
+		}
+		else if(command.compare("AddWife") == 0)
+		{
+			long wifeId, husbandId;
+			string first, last;
+			fin >> wifeId >> first >> last >> husbandId;
+			AddWife(wifeId, first, last, husbandId);
+		}
+		else if(command.compare("RemoveHusband") == 0)
+		{
+			long id;
+			fin >> id;
+			RemoveHusband(id);
+		}
+		else if(command.compare("RemoveWife") == 0)
+		{
+			long id;
+			fin >> id;
+			RemoveWife(id);
+		}
+		else if(command.compare("AddAChild") == 0)
+		{
+			long childId, dadId;
+			string first, last;
+			fin >> childId >> first >> last >> dadId;
+			AddAChild(childId, first, last, dadId);
+		}
+		else if(command.compare("RemoveAChild") == 0)
+		{
+			long childId, dadId;
+			fin >> childId >> dadId;
+			RemoveAChild(childId, dadId);
+		}
+		else if(command.compare("PrintAFamily") == 0)
+		{
+			long dadId;
+			fin >> dadId;
+			PrintAFamily(dadId);
+		}
+		else if(command.compare("PrintAllFamilies"))
+		{
+			PrintAllFamilies();
+		}
+		else
+			cout << "Invalid command." << endl;
+		
+		cout << "_______________________________";
+	}
 	
 }
  
@@ -438,13 +515,19 @@ bool Family::SearchForHusband(long social)
 void Family::RemoveAllChildrenInFamily(long dad)
 {
 	Husband* theDad = getHusband(dad);
-	if(theDad == NULL)
+	if(theDad == NULL)	// Catch husband does not exist.
 	{
 		cout << "Could not find Dad. Children could not be removed." << endl;
 		return;
 	}
 	
 	Wife* theWife = theDad -> myWife;
+	
+	if(theWife == NULL)	// Checks if there is a wife
+	{
+		cout << "This husband has no wife. No children to remove." << endl;
+		return;
+	}
 	
 	// Removes the children one at a time from the top of the list.
 	while(theWife -> children != NULL)
@@ -473,10 +556,27 @@ Husband* Family::getHusband(long husbandSSN)
 	return theHusband;
 }
  
- 
+/***************************************************************************
+ * RemoveAllFamilies                                                       *
+ *                                                                         *
+ * Deletes all the families in the list.                                   *
+ ***************************************************************************/
+  
 bool RemoveAllFamilies()
 {
 	
+	Husband* headOfFamily = top;
+	while (top -> nextFamily != NULL)
+	{
+		cout << top -> firstName << " " << top -> lastName 
+			<< " has been removed from this list." << endl;
+		top = top -> nextFamily;
+		RemoveHusband(headOfFamily -> SSN);
+		headOfFamily = top;
+	}
+	
+	top = NULL;
+	return true;
 }
 
 #endif
