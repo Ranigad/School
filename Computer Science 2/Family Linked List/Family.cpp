@@ -187,8 +187,9 @@ void Family::AddWife(long social, string first, string last, long husband)
  * Is passed the SSN of her husband. Removes the wife of the husband that  *
  * has the associated SSN.                                                 *
  ***************************************************************************/
-void Family::RemoveWife(long husband)
+void Family::RemoveWife(long husbandSSN)
 {
+	/*
 	// No node case
 	if(top == NULL)
 	{
@@ -210,6 +211,15 @@ void Family::RemoveWife(long husband)
 	while(current -> SSN != husband)
 	{
 		current = current -> nextFamily;
+	}
+	*/
+	
+	HusbandPtr current = getHusband(husbandSSN);
+	
+	if(current == NULL)
+	{
+		cout << "Could not remove wife." << endl;
+		return;
 	}
 	
 	Wife* theWife = current -> myWife;
@@ -557,7 +567,7 @@ bool Family::SearchForHusband(long social)
  ***************************************************************************/
 void Family::RemoveAllChildrenInFamily(long dad)
 {
-	Husband* theDad = getHusband(dad);
+	DadPtr theDad = getHusband(dad);
 	if(theDad == NULL)	// Catch husband does not exist.
 	{
 		cout << "Could not find Dad. Children could not be removed." << endl;
