@@ -53,8 +53,8 @@ using namespace std;
  ***************************************************************************/
 	ostream& operator<<(ostream& os, const Person& p)
 	{
-		os << "Name: " << p.firstName << " " << p.lastName << endl
-			<< "Social Security: " << p.SSN << endl;
+		os << p.firstName << " " << p.lastName 
+			<< " (" << p.SSN << ")" << endl;
 		return os;
 	}
 	

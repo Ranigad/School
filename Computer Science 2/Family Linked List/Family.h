@@ -12,6 +12,8 @@ typedef Husband* DadPtr;
 
 class Family {
 	protected:
+	static bool success;
+	static bool failure;
 	HusbandPtr top;
 	
 	public:
@@ -22,15 +24,15 @@ class Family {
 	
 		// Husband
 	void AddHusband(long, string, string);
-	void RemoveHusband(long);
+	bool RemoveHusband(long);
 	
 		// Wife
 	void AddWife(long, string, string, long);
-	void RemoveWife(long);
+	bool RemoveWife(long);
 	
 		// Child
 	void AddAChild(long, string, string, long);
-	void RemoveAChild(long, long);
+	bool RemoveAChild(long, long);
 	void RemoveAllChildrenInFamily(long);
 	
 	// Print Functions
@@ -43,6 +45,7 @@ class Family {
 	// Helper Functions
 	DadPtr getDad(long);
 	HusbandPtr getHusband(long);
+	string getHusbandName(long);
 	void RemoveAllFamilies();
 };
 
