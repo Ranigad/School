@@ -22,6 +22,7 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 // Static Bools
+// Used to make the code more readable.
 bool Family::success = true;
 bool Family::failure = false;
 
@@ -65,6 +66,7 @@ void Family::AddHusband(long husbandSSN, string first, string last)
 	newFamily -> nextFamily = top;	// Prepares for insert at top
 	top = newFamily;	// Inserts at top
 	
+	// Success message.
 	cout << first << " " << last << " has been added to the list!" << endl;
 }
   
@@ -77,6 +79,8 @@ void Family::AddHusband(long husbandSSN, string first, string last)
 bool Family::RemoveHusband(long husbandSSN)
 {
 	HusbandPtr theHusband = getHusband(husbandSSN);
+	
+	// Case where husband not found.
 	if(theHusband == NULL)
 	{
 		cout << "No husband to remove." << endl;
@@ -87,9 +91,10 @@ bool Family::RemoveHusband(long husbandSSN)
 	if(theHusband -> myWife != NULL)
 		RemoveWife(husbandSSN);
 	
+	// Case where the top node is the husband in question.
 	if(top == theHusband)
 	{
-		top = top -> nextFamily;	
+		top = top -> nextFamily;	// Move top down to the next family.
 	}
 	else
 	{
@@ -105,12 +110,7 @@ bool Family::RemoveHusband(long husbandSSN)
 		previous -> nextFamily = theHusband -> nextFamily;	
 	}
 
-	/* Old status output
-	cout << theHusband -> firstName << " " 
-		<< theHusband -> lastName << "'s family"
-		<< " has been removed from the list." << endl;
-		*/
-	delete theHusband;
+	delete theHusband;	// Deletes the husband.
 	return success;
 }
 
@@ -127,6 +127,7 @@ void Family::AddWife(long wifeSSN, string first, string last, long husbandSSN)
 	
 	HusbandPtr theHusband = getHusband(husbandSSN);
 	
+	// Case for husband not found.
 	if(theHusband == NULL)
 	{
 		cout << "There's nobody for " << first << " " << last 
@@ -134,7 +135,7 @@ void Family::AddWife(long wifeSSN, string first, string last, long husbandSSN)
 		return;
 	}
 	
-	// Checks if the husband is already married.
+	// Checks if the husband is already married. Returns if he is.
 	if(theHusband -> myWife != NULL)
 	{
 		cout << theHusband -> firstName << " " << theHusband -> lastName 
@@ -147,6 +148,7 @@ void Family::AddWife(long wifeSSN, string first, string last, long husbandSSN)
 	theHusband -> myWife = newWife;	// Sets the wife.
 	newWife -> children = NULL;	// Should be done in constructor already.
 	
+	// Success message.
 	cout << "I now pronounce " << first << " " << last << " and "
 		<< theHusband -> firstName << " " << theHusband -> lastName 
 		<< " husband and wife." << endl;
@@ -163,6 +165,7 @@ bool Family::RemoveWife(long husbandSSN)
 	
 	HusbandPtr theHusband = getHusband(husbandSSN);
 	
+	// Husband could not be found case.
 	if(theHusband == NULL)
 	{
 		cout << "No wife to remove." << endl;
@@ -171,7 +174,7 @@ bool Family::RemoveWife(long husbandSSN)
 	
 	WifePtr theWife = theHusband -> myWife;
 	
-	// Checks if there is a wife to delete.
+	// Checks if there is a wife to delete. Returns if there isn't.
 	if(theWife == NULL)
 	{
 		cout << theHusband -> firstName << " " << theHusband -> lastName
@@ -179,16 +182,10 @@ bool Family::RemoveWife(long husbandSSN)
 		return failure;
 	}
 
-	// Delete all children
+	// Delete all children first
 	RemoveAllChildrenInFamily(theHusband -> SSN);
-	
-	/* Old status output 
-	cout << theWife -> firstName << " " << theWife -> lastName
-		<< " removed from " << theHusband -> firstName << " " 
-		<< theHusband -> lastName << "'s family." << endl;
-		*/
-		
-	// Delete wife and set the wife to NULL.		
+
+	// Delete wife and set the wife pointer to NULL.		
 	delete theWife;
 	theHusband -> myWife = NULL;
 	return success;
@@ -206,6 +203,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 	
 	DadPtr theHusband = getDad(dadSSN);
 	
+	// Husband couldn't be found case.
 	if(theHusband == NULL)
 	{
 		cout << "There is no dad for " << first << " " << last << endl;
@@ -214,6 +212,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 	
 	WifePtr theWife = theHusband -> myWife; 	// Wife for reference
 	
+	// If there is no wife case.
 	if(theWife == NULL)
 	{
 		cout << theHusband -> firstName << " " << theHusband -> lastName 
@@ -227,6 +226,7 @@ void Family::AddAChild(long childSSN, string first, string last, long dadSSN)
 	newChild -> mySibling = theWife -> children;	
 	theWife -> children = newChild;
 
+	// Output message.
 	cout << first << " " << last << " has been added under "
 		<< theHusband -> firstName << " " << theHusband -> lastName << endl;
 }
@@ -242,12 +242,14 @@ bool Family::RemoveAChild(long childSSN, long dadSSN)
 	
 	DadPtr theDad = getDad(dadSSN);
 	
+	// The case where the dad doesn't exist or couldn't be found.
 	if(theDad == NULL)
 	{
 		cout << "No child to remove." << endl;
 		return failure;
 	}
 	
+	// Case where there isn't a wife.
 	if(theDad -> myWife == NULL)
 	{
 		cout << theDad -> firstName << " " << theDad -> lastName
@@ -270,6 +272,7 @@ bool Family::RemoveAChild(long childSSN, long dadSSN)
 		// Finds the correct child.
 		while(currentChild -> SSN != childSSN)
 		{
+			// Cycling through the children.
 			previousChild = currentChild;
 			currentChild = currentChild -> mySibling;
 			
@@ -284,12 +287,6 @@ bool Family::RemoveAChild(long childSSN, long dadSSN)
 		// Has the child before the one being deleted point to the one after
 		previousChild -> mySibling = currentChild -> mySibling;
 	}
-	
-	/* Old status output
-	cout << currentChild -> firstName << " " << currentChild -> lastName
-		<< " has been removed from " << theDad -> firstName << " " 
-		<< theDad -> lastName << "'s family." << endl;
-		*/
 		
 	delete currentChild;	// Deletes the child.
 	return success;
@@ -337,25 +334,31 @@ void Family::PrintAFamily(long husbandSSN)
 {	
 	
 	HusbandPtr theHusband = getHusband(husbandSSN);
+	
+	// Empty list case.
 	if(theHusband == NULL)
 	{
 		cout << "Could not print family." << endl;
 		return;
 	}
 	
-	cout << "Husband" << endl << *theHusband << endl;		// Print dad info.
+	cout << "Husband" << endl << *theHusband << endl;	// Print husband info.
 	
+	// Checks if there is a wife, returns if there isn't.
 	if(theHusband -> myWife == NULL)
 		return;
 	
+	// If there is, print the wife's information.
 	WifePtr theWife = theHusband -> myWife;
 	cout << "Wife" << endl << *theWife << endl;
 	
+	// Checks if the wife has children, returns if there aren't.
 	if(theWife -> children == NULL)
 		return;
 	
 	ChildPtr theChild = theWife -> children;
 	
+	// Prints out all the children using a while loop.
 	cout << "Children" << endl;
 	
 	while(theChild != NULL)
@@ -372,21 +375,26 @@ void Family::PrintAFamily(long husbandSSN)
  * Prints all the husbands and their associated family members in the list.* ***************************************************************************/
 void Family::PrintAllFamilies()
 {
+	// Checks if there are families
 	if(top != NULL)
 	{
 		HusbandPtr theHusband = top;
+		// If there are husbands, loop until the end of the list.
 		while (theHusband != NULL)
 		{
-			if(theHusband != top)	// Don't print on the first time through
+			if(theHusband != top)	// Don't print divider on the first print
 			{
 				cout << "---------------------------------------- \n\n";
 			}
-			PrintAFamily(theHusband -> SSN);
-			theHusband = theHusband -> nextFamily;
+			PrintAFamily(theHusband -> SSN);	// Print using PrintAFamily
+			theHusband = theHusband -> nextFamily;	// Cycles to next husband.
 		}
 	}
+	// Case where list is empty.
 	else
+	{
 		cout << "There are no families!" << endl;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -399,19 +407,23 @@ void Family::PrintAllFamilies()
  ***************************************************************************/
 void Family::ReadTransactionFile()
 {
-	string command;
+	string command;	// To hold the command.
 	ifstream fin;
 	fin.open("data.txt");
 	
+	// Checks if file exists, returns if it doesn't.
 	if(!fin)
 	{
 		cout << "File not found. " << endl;
 		return;
 	}
 	
+	// Keeps pulling in commands until end of file.
 	while(fin >> command)
 	{
-		cout << "Command: " << command << endl;
+		cout << "Command: " << command << endl;	// Prints the command.
+		
+		// Calls a method and imports more data depending on the command.
 		if(command.compare("AddHusband") == 0)
 		{
 			long id;
@@ -478,7 +490,7 @@ void Family::ReadTransactionFile()
 		else
 			cout << "Invalid command." << endl;
 		
-		
+		// Divider
 		cout << "______________________________________________________________"
 			<< "_______________" << endl;
 	
@@ -495,18 +507,19 @@ void Family::ReadTransactionFile()
  ***************************************************************************/
 HusbandPtr Family::getHusband(long husbandSSN)
 {
+	// Empty list case.
 	if(top == NULL)
 	{
 		cout << "This list is empty! ";
 		return NULL;
 	}
 	
-	HusbandPtr theHusband = top;		// Pointer to cycle through the list.
+	HusbandPtr theHusband = top; // Pointer to cycle through the list.
 	
-	// Cycle until you reach the node after the last.
+	// Cycle until you reach the node after the last family.
 	while(theHusband != NULL)
 	{
-		// Returns true if found.
+		// Returns true if SSN provided matches the husband's.
 		if(theHusband -> SSN == husbandSSN)
 			return theHusband;
 		
@@ -528,23 +541,25 @@ HusbandPtr Family::getHusband(long husbandSSN)
  }
  
 /***************************************************************************
- * getHusbandName                                                          *
+ * getName     		                                                       *
  *                                                                         *
- * Passed the id number of the husband and returns a string containing the *
- * first and last name of the father/husband.                              *
+ * Generic function that returns the name of a husband, wife, or child     *
+ * given the dad/husband's ssn, the child's ssn if looking for child (0 if *
+ * otherwise), and the string of the name of the family member (i.e. Dad,  *
+ * Child, Husband, or Wife). 											   *
+ *																		   *
+ * Utilized primarily to allow Remove method calls to have a more		   *
+ * descriptive return message since they do not have easy access to names. *
+ *																		   *
+ * [Note: If the getName function fails to find the name, it will return an*
+ * empty string. This is okay since if it fails to find the name, then in  *
+ * the ReadTransactionFile method, the message will never be displayed     *
+ * since the primary method being called (RemoveWife, RemoveAChild, etc.)  *
+ * will return false. So the string returned on failure doesn't matter.    *			 
  ***************************************************************************/
  string Family::getName(long husbandSSN, long childSSN, 
 						string familyMember)
  {
-	 /*
-	if(top == NULL)
-		return " ";
-	HusbandPtr theHusband = getHusband(husbandSSN);
-	if(theHusband == NULL)
-		return " ";
-	else
-		return theHusband -> firstName + " " + theHusband -> lastName;
-	*/
 	
 	// Empty list case
 	if(top == NULL)
@@ -566,12 +581,13 @@ HusbandPtr Family::getHusband(long husbandSSN)
 	}
 	
 	// If the desired name is the husband's, return the husband's name.
+	// Otherwise, it will fall through.
 	if(familyMember.compare("Husband") == 0 || familyMember.compare("Dad") == 0)
 	{
 		return theHusband -> firstName + " " + theHusband -> lastName;
 	}
 	
-	// Check if wife exists, return if it doesn't
+	// Check if wife exists, return "nothing" if it doesn't
 	if(theHusband -> myWife == NULL)
 	{
 		return " ";
@@ -597,12 +613,14 @@ HusbandPtr Family::getHusband(long husbandSSN)
 		theChild = theChild -> mySibling;
 	}
 	
-	// Checks if NULL is hit and returns if true (prevents seg fault)
+	// Checks if the childSSN provided doesn't match any child under the dad.
+	// returns "nothing" if that's the case. (Prevents segmentation fault).
 	if(theChild == NULL)
 	{
 		return " ";
 	}
 	
+	// Checks if the SSN does match (it should at this point but just incase)
 	if(theChild -> SSN == childSSN)
 	{
 		return theChild -> firstName + " " + theChild -> lastName;
@@ -624,9 +642,9 @@ void Family::RemoveAllFamilies()
 	HusbandPtr headOfFamily = top;
 	while(top != NULL)
 	{
-		headOfFamily = top -> nextFamily;
-		RemoveHusband(top -> SSN);
-		top = headOfFamily;
+		headOfFamily = top -> nextFamily;	// Saves the next family.
+		RemoveHusband(top -> SSN);	// Removes the husband using RemoveHusband
+		top = headOfFamily;	// Shifts top down. This way top will end as NULL.
 	}
 }
 
