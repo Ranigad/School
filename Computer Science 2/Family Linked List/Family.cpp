@@ -457,6 +457,10 @@ void Family::ReadTransactionFile()
 					<< getName(husbandId, 0, "Husband") << "'s family" << endl;
 			}
 		}
+		/* Note: Lower cased c because that's how Hadaegh had it in his example
+				data file. Could potentially write a string formatter to insure
+				uniform naming
+		*/
 		else if(command.compare("AddAchild") == 0)
 		{
 			long childId, dadId;
