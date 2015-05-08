@@ -45,7 +45,7 @@ class Family {
 	// Helper Functions
 	DadPtr getDad(long);
 	HusbandPtr getHusband(long);
-	string getHusbandName(long);
+	string getName(long, long, string);
 	void RemoveAllFamilies();
 };
 

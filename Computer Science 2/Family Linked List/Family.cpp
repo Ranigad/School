@@ -377,7 +377,10 @@ void Family::PrintAllFamilies()
 		HusbandPtr theHusband = top;
 		while (theHusband != NULL)
 		{
-			cout << "----------" << endl << endl;
+			if(theHusband != top)	// Don't print on the first time through
+			{
+				cout << "---------------------------------------- \n\n";
+			}
 			PrintAFamily(theHusband -> SSN);
 			theHusband = theHusband -> nextFamily;
 		}
@@ -427,18 +430,19 @@ void Family::ReadTransactionFile()
 		{
 			long id;
 			fin >> id;
-			string husbandName = getHusbandName(id);
+			string husbandName = getName(id, 0, "Husband");
 			if(RemoveHusband(id))
-				cout << husbandName << " removed." << endl;
+				cout << husbandName << "'s family removed." << endl;
 		}
 		else if(command.compare("RemoveWife") == 0)
 		{
 			long husbandId;
 			fin >> husbandId;
+			string wifeName = getName(husbandId, 0, "Wife");
 			if(RemoveWife(husbandId))
 			{
-				cout << "Wife removed from " << getHusbandName(husbandId)
-					<< "'s family" << endl;
+				cout << wifeName << " and children removed from " 
+					<< getName(husbandId, 0, "Husband") << "'s family" << endl;
 			}
 		}
 		else if(command.compare("AddAchild") == 0)
@@ -452,10 +456,11 @@ void Family::ReadTransactionFile()
 		{
 			long childId, dadId;
 			fin >> dadId >> childId;
+			string childName = getName(dadId, childId, "Child");
 			if(RemoveAChild(childId, dadId))
 			{
-				cout << "Child removed from " << getHusbandName(dadId) 
-					<< "'s family" << endl;
+				cout << childName << " removed from " 
+					<< getName(dadId, 0, "Dad") << "'s family" << endl;
 			}
 		}
 		else if(command.compare("PrintAFamily") == 0)
@@ -473,7 +478,10 @@ void Family::ReadTransactionFile()
 		else
 			cout << "Invalid command." << endl;
 		
-		cout << "_______________________________" << endl;
+		
+		cout << "______________________________________________________________"
+			<< "_______________" << endl;
+	
 	}
 	
 }
@@ -525,8 +533,10 @@ HusbandPtr Family::getHusband(long husbandSSN)
  * Passed the id number of the husband and returns a string containing the *
  * first and last name of the father/husband.                              *
  ***************************************************************************/
- string Family::getHusbandName(long husbandSSN)
+ string Family::getName(long husbandSSN, long childSSN, 
+						string familyMember)
  {
+	 /*
 	if(top == NULL)
 		return " ";
 	HusbandPtr theHusband = getHusband(husbandSSN);
@@ -534,6 +544,72 @@ HusbandPtr Family::getHusband(long husbandSSN)
 		return " ";
 	else
 		return theHusband -> firstName + " " + theHusband -> lastName;
+	*/
+	
+	// Empty list case
+	if(top == NULL)
+	{
+		return " ";
+	}
+	
+	HusbandPtr theHusband = top;
+	// Cycles through and finds the husband or hits NULL if it doesn't
+	while(theHusband != NULL && theHusband -> SSN != husbandSSN)
+	{
+		theHusband = theHusband -> nextFamily;
+	}
+	
+	// If the husband wasn't found, return "nothing".
+	if(theHusband == NULL)
+	{
+		return " ";
+	}
+	
+	// If the desired name is the husband's, return the husband's name.
+	if(familyMember.compare("Husband") == 0 || familyMember.compare("Dad") == 0)
+	{
+		return theHusband -> firstName + " " + theHusband -> lastName;
+	}
+	
+	// Check if wife exists, return if it doesn't
+	if(theHusband -> myWife == NULL)
+	{
+		return " ";
+	}
+	
+	// If the desired name is the wife's, then return the wife's name.
+	WifePtr theWife = theHusband -> myWife;
+	if(familyMember.compare("Wife") == 0)
+	{
+		return theWife -> firstName + " " + theWife -> lastName;
+	}
+	
+	// Check if there are children, return if none.
+	if(theWife -> children == NULL)
+	{
+		return " ";
+	}
+	
+	// Cycle through the children until null is hit or if the SSN matches
+	ChildPtr theChild = theWife -> children;
+	while(theChild != NULL && theChild -> SSN != childSSN)
+	{
+		theChild = theChild -> mySibling;
+	}
+	
+	// Checks if NULL is hit and returns if true (prevents seg fault)
+	if(theChild == NULL)
+	{
+		return " ";
+	}
+	
+	if(theChild -> SSN == childSSN)
+	{
+		return theChild -> firstName + " " + theChild -> lastName;
+	}
+	
+	// Catches if the method misses anything.
+	return " ";
  }
  
   
