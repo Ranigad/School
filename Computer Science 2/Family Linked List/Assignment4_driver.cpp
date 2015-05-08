@@ -15,13 +15,17 @@
 		| 
 		Child
 */
-
+#include <iostream>
 #include "Family.h"
+using namespace std;
 
 int main()
 {
+	string fileName;
 	Family USAFamilies;
-	USAFamilies.ReadTransactionFile();
+	cout << "Enter the filename: ";
+	cin >> fileName;
+	USAFamilies.ReadTransactionFile(fileName);
 	return 0;
 }
 

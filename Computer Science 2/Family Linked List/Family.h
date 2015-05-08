@@ -40,7 +40,7 @@ class Family {
 	void PrintAllFamilies();
 	
 	// List Initialization
-	void ReadTransactionFile();
+	void ReadTransactionFile(string);
 	
 	// Helper Functions
 	DadPtr getDad(long);

@@ -130,8 +130,7 @@ void Family::AddWife(long wifeSSN, string first, string last, long husbandSSN)
 	// Case for husband not found.
 	if(theHusband == NULL)
 	{
-		cout << "There's nobody for " << first << " " << last 
-			<< " to marry" << endl;
+		cout << "Couldn't marry off " << first << " " << last << endl;
 		return;
 	}
 	
@@ -405,11 +404,11 @@ void Family::PrintAllFamilies()
  * Reads a command and parameters from a designated input file and calls a *
  * corresponding method.                                                   *
  ***************************************************************************/
-void Family::ReadTransactionFile()
+void Family::ReadTransactionFile(string fileName)
 {
 	string command;	// To hold the command.
 	ifstream fin;
-	fin.open("data.txt");
+	fin.open(fileName.data());
 	
 	// Checks if file exists, returns if it doesn't.
 	if(!fin)
